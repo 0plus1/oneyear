@@ -3,4 +3,7 @@ in/*
 !in/.gitkeep
 out/*
 !out/.gitkeep
+fonts/*
+!fonts/.gitkeep
+*.pyc
 __pycache__
