@@ -16,6 +16,7 @@ from .discovery import list_images
 from .exif_sort import photo_datetime
 from .grid import center_box_cells, in_center_box, mm_to_px, resolve_grid
 from .text_block import draw_center_text
+from .grid import compute_grid_and_center_box_for_count, center_box_cells
 
 def fit_center_crop(img: Image.Image, target_w: int, target_h: int) -> Image.Image:
     img = ImageOps.exif_transpose(img)
@@ -37,12 +38,20 @@ def render(cfg: Config) -> None:
     photos = list_images(cfg.input_dir)
     if not photos:
         raise RuntimeError(f"No images found in {cfg.input_dir}")
-
+    
     photos_sorted = sorted(photos, key=photo_datetime)
 
-    reserved = cfg.center_box_h_cells * cfg.center_box_w_cells
-    rows, cols = resolve_grid(cfg.rows, cfg.cols, len(photos_sorted), reserved)
-    box_cells = center_box_cells(rows, cols, cfg.center_box_h_cells, cfg.center_box_w_cells)
+    EXPECTED = 365
+    if len(photos_sorted) < EXPECTED:
+        print(f"WARNING: Only {len(photos_sorted)} photos found (< {EXPECTED}). Output will have empty slots.")
+
+    # Use expected count to force a consistent layout for “365 posters”
+    rows, cols, box_h, box_w = compute_grid_and_center_box_for_count(EXPECTED, target_ratio=1.6)
+
+    # If user explicitly provided rows/cols or box dims, let them override (optional)
+    # Otherwise keep computed values.
+
+    box_cells = center_box_cells(rows, cols, box_h, box_w)
 
     usable_side = side_px - 2 * outer_margin
     if usable_side <= 0:
