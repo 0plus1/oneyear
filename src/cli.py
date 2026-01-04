@@ -19,8 +19,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--rows", type=int, default=None)
     p.add_argument("--cols", type=int, default=None)
 
-    p.add_argument("--center-box-h", type=int, default=4)
-    p.add_argument("--center-box-w", type=int, default=6)
+    p.add_argument("--center-box-h", type=int, default=5)
+    p.add_argument("--center-box-w", type=int, default=7)
 
     p.add_argument("--title", default="2025")
     p.add_argument("--subtitle", default="A year in photos")

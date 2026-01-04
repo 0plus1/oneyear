@@ -92,3 +92,24 @@ def draw_center_text(
     y = draw_lines(title_lines, title_font, title_color, y, gap_title)
     y += between
     _ = draw_lines(subtitle_lines, subtitle_font, subtitle_color, y, gap_sub)
+
+def fit_rect_to_aspect(box_px: tuple[int, int, int, int], aspect: float) -> tuple[int, int, int, int]:
+    x0, y0, x1, y1 = box_px
+    w = x1 - x0
+    h = y1 - y0
+
+    # target: new_w / new_h = aspect, and it must fit inside (w, h)
+    if w / h > aspect:
+        # too wide -> limit by height
+        new_h = h
+        new_w = int(round(new_h * aspect))
+    else:
+        # too tall -> limit by width
+        new_w = w
+        new_h = int(round(new_w / aspect))
+
+    nx0 = x0 + (w - new_w) // 2
+    ny0 = y0 + (h - new_h) // 2
+    nx1 = nx0 + new_w
+    ny1 = ny0 + new_h
+    return nx0, ny0, nx1, ny1

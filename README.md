@@ -81,10 +81,10 @@ uv run python main.py \
 
 The center title box occupies a rectangular area measured in **grid cells**, reserved in the middle of the layout.
 
-- `--center-box-h` (default: `4`)  
+- `--center-box-h` (default: `5`)  
   Height of the center box in grid cells.
 
-- `--center-box-w` (default: `6`)  
+- `--center-box-w` (default: `7`)  
   Width of the center box in grid cells.
 
 - `--box-bg` (default: `white`)  
@@ -143,8 +143,8 @@ uv run python main.py \
   --output "./out/megaposter_a0square_300dpi.tif" \
   --dpi 300 \
   --square-mm 841 \
-  --center-box-h 4 \
-  --center-box-w 6 \
+  --center-box-h 5 \
+  --center-box-w 7 \
   --gutter 10 \
   --outer-margin 80
 ```
@@ -166,6 +166,7 @@ uv run python main.py \
 
 - Photos are sorted by **EXIF DateTimeOriginal**, then **DateTime**, with file modification time as fallback.
 - Images are center-cropped to fill their grid cells (no letterboxing).
+- The 7x5 default gives a perfect 365 photo grid; adjust these parameters and photo count to explore custom layouts.
 - TIFF output is recommended for professional printing.
 - Very large sizes (e.g. A0 long-side square at 300 DPI) may require significant RAM — use `--preview-scale` to iterate safely.
 

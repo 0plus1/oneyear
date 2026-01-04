@@ -19,8 +19,8 @@ class Config:
     rows: Optional[int] = None
     cols: Optional[int] = None
 
-    center_box_h_cells: int = 4
-    center_box_w_cells: int = 6
+    center_box_h_cells: int = 5
+    center_box_w_cells: int = 7
 
     title: str = "2025"
     subtitle: str = "A year in photos"

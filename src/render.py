@@ -15,8 +15,7 @@ from .config import Config
 from .discovery import list_images
 from .exif_sort import photo_datetime
 from .grid import center_box_cells, in_center_box, mm_to_px, resolve_grid
-from .text_block import draw_center_text
-from .grid import compute_grid_and_center_box_for_count, center_box_cells
+from .text_block import draw_center_text, fit_rect_to_aspect
 
 def fit_center_crop(img: Image.Image, target_w: int, target_h: int) -> Image.Image:
     img = ImageOps.exif_transpose(img)
@@ -45,13 +44,14 @@ def render(cfg: Config) -> None:
     if len(photos_sorted) < EXPECTED:
         print(f"WARNING: Only {len(photos_sorted)} photos found (< {EXPECTED}). Output will have empty slots.")
 
-    # Use expected count to force a consistent layout for “365 posters”
-    rows, cols, box_h, box_w = compute_grid_and_center_box_for_count(EXPECTED, target_ratio=1.6)
+    reserved_cells = cfg.center_box_h_cells * cfg.center_box_w_cells
+    if cfg.rows and cfg.cols:
+        rows, cols = resolve_grid(cfg.rows, cfg.cols, len(photos_sorted), reserved_cells)
+    else:
+        layout_count = max(len(photos_sorted), EXPECTED)
+        rows, cols = resolve_grid(None, None, layout_count, reserved_cells)
 
-    # If user explicitly provided rows/cols or box dims, let them override (optional)
-    # Otherwise keep computed values.
-
-    box_cells = center_box_cells(rows, cols, box_h, box_w)
+    box_cells = center_box_cells(rows, cols, cfg.center_box_h_cells, cfg.center_box_w_cells)
 
     usable_side = side_px - 2 * outer_margin
     if usable_side <= 0:
@@ -87,7 +87,7 @@ def render(cfg: Config) -> None:
             try:
                 with Image.open(p) as im:
                     im2 = fit_center_crop(im, img_w, img_h)
-                    canvas.paste(im2, (x + cfg.gutter_px, y + cfg.gutter_px))
+                    canvas.paste(im2, (x + gutter, y + gutter))
             except Exception as e:
                 print(f"WARNING: failed to process {p}: {e}")
 
@@ -100,10 +100,12 @@ def render(cfg: Config) -> None:
     box_y0 = grid_y0 + r0 * cell_h
     box_x1 = grid_x0 + c1 * cell_w
     box_y1 = grid_y0 + r1 * cell_h
+    full_box = (box_x0, box_y0, box_x1, box_y1)
+    text_box = fit_rect_to_aspect(full_box, aspect=16/9)
 
     draw_center_text(
         canvas=canvas,
-        box_px=(box_x0, box_y0, box_x1, box_y1),
+        box_px=text_box,
         title=cfg.title,
         subtitle=cfg.subtitle,
         font_path=cfg.font_path,
