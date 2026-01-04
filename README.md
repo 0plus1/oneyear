@@ -12,7 +12,7 @@ Built in Python with Pillow. Managed **strictly with `uv`**.
 ## Requirements
 - Python 3.10+ recommended
 - [`uv`](https://github.com/astral-sh/uv)
-- macOS / Linux / Windows supported
+- [`libheif`](https://github.com/strukturag/libheif) (if HEIF format is needed)
 
 ## Install
 ```bash
