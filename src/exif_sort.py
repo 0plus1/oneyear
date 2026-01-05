@@ -12,9 +12,15 @@ def _parse_exif_dt(exif_value: str) -> Optional[datetime]:
     except Exception:
         return None
 
+def _file_created_timestamp(path: Path) -> Optional[float]:
+    stat = path.stat()
+    if hasattr(stat, "st_birthtime"):
+        return stat.st_birthtime
+    return None
+
 def photo_datetime(path: Path) -> datetime:
     """
-    DateTimeOriginal (36867) -> DateTime (306) -> file mtime.
+    DateTimeOriginal (36867) -> DateTime (306) -> file birthtime -> file mtime.
     """
     try:
         with Image.open(path) as im:
@@ -33,5 +39,9 @@ def photo_datetime(path: Path) -> datetime:
     except Exception:
         pass
 
-    ts = path.stat().st_mtime
-    return datetime.fromtimestamp(ts)
+    created_ts = _file_created_timestamp(path)
+    if created_ts is not None:
+        return datetime.fromtimestamp(created_ts)
+
+    modified_ts = path.stat().st_mtime
+    return datetime.fromtimestamp(modified_ts)
