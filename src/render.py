@@ -71,6 +71,9 @@ def render(cfg: Config) -> None:
     canvas = Image.new("RGB", (side_px, side_px), "white")
 
     idx = 0
+    upscaled = 0
+    src_min_w = None
+    src_min_h = None
     for r in range(rows):
         for c in range(cols):
             if in_center_box(r, c, box_cells):
@@ -86,6 +89,11 @@ def render(cfg: Config) -> None:
 
             try:
                 with Image.open(p) as im:
+                    src_w, src_h = im.size
+                    if src_w < img_w or src_h < img_h:
+                        upscaled += 1
+                    src_min_w = src_w if src_min_w is None else min(src_min_w, src_w)
+                    src_min_h = src_h if src_min_h is None else min(src_min_h, src_h)
                     im2 = fit_center_crop(im, img_w, img_h)
                     canvas.paste(im2, (x + gutter, y + gutter))
             except Exception as e:
@@ -132,3 +140,6 @@ def render(cfg: Config) -> None:
 
     print(f"Saved: {cfg.out_path}")
     print(f"Canvas: {canvas.size[0]} x {canvas.size[1]} px | Grid: {rows}x{cols} | Used: {min(idx, len(photos_sorted))}/{len(photos_sorted)}")
+    print(f"Tile: {img_w} x {img_h} px | Gutter: {gutter}px | Outer margin: {outer_margin}px")
+    if src_min_w is not None and src_min_h is not None:
+        print(f"Smallest source photo: {src_min_w} x {src_min_h} px | Upscaled tiles: {upscaled}")
