@@ -32,6 +32,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--subtitle-color", default="#333333")
     p.add_argument("--box-bg", default="white")
     p.add_argument("--text-padding", type=int, default=80)
+    p.add_argument("--no-text", action="store_true",
+                   help="Skip rendering title/subtitle (leave empty center box)")
 
     p.add_argument("--preview-scale", type=float, default=1.0,
                    help="Scale down output for fast preview, e.g. 0.15")
@@ -61,6 +63,7 @@ def main() -> None:
         box_bg=args.box_bg,
         text_padding_px=args.text_padding,
         preview_scale=args.preview_scale,
+        draw_text=not args.no_text,
     )
 
     render(cfg)

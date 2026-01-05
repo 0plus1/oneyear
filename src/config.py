@@ -34,3 +34,4 @@ class Config:
     text_padding_px: int = 80
 
     preview_scale: float = 1.0
+    draw_text: bool = True

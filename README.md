@@ -93,6 +93,9 @@ The center title box occupies a rectangular area measured in **grid cells**, res
 - `--text-padding` (default: `80`)  
   Padding in pixels inside the center box.
 
+- `--no-text`  
+  Skip rendering title/subtitle and leave an empty center box (useful for external editing).
+
 ---
 
 ### Text & typography
@@ -141,12 +144,8 @@ uv run python main.py \
 uv run python main.py \
   --input "./in" \
   --output "./out/megaposter_a0square_300dpi.tif" \
-  --dpi 300 \
-  --square-mm 841 \
-  --center-box-h 5 \
-  --center-box-w 7 \
-  --gutter 10 \
-  --outer-margin 80
+  --title "2025" \
+  --subtitle "Our year in 365 moments"
 ```
 
 #### Custom font and colors
@@ -161,6 +160,19 @@ uv run python main.py \
 ```
 
 ---
+
+
+##
+
+uv run python main.py \
+  --input "./in" \
+  --output "./out/preview.png" \
+  --title "Lorenzo" \
+  --subtitle "My first year in 365 moments" --font "./fonts/AtkinsonHyperlegible-Bold.ttf" --title-size=500 --subtitle-size=200 \
+  --title-color "#0B0B0B" \
+  --subtitle-color "#444444" \
+  --preview-scale 0.15 
+
 
 ### Notes
 

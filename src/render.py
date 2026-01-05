@@ -111,19 +111,25 @@ def render(cfg: Config) -> None:
     full_box = (box_x0, box_y0, box_x1, box_y1)
     text_box = fit_rect_to_aspect(full_box, aspect=16/9)
 
-    draw_center_text(
-        canvas=canvas,
-        box_px=text_box,
-        title=cfg.title,
-        subtitle=cfg.subtitle,
-        font_path=cfg.font_path,
-        title_size=int(cfg.title_size * cfg.preview_scale),
-        subtitle_size=int(cfg.subtitle_size * cfg.preview_scale),
-        title_color=cfg.title_color,
-        subtitle_color=cfg.subtitle_color,
-        box_bg=cfg.box_bg,
-        padding_px=text_padding,
-    )
+    if cfg.draw_text:
+        draw_center_text(
+            canvas=canvas,
+            box_px=text_box,
+            title=cfg.title,
+            subtitle=cfg.subtitle,
+            font_path=cfg.font_path,
+            title_size=int(cfg.title_size * cfg.preview_scale),
+            subtitle_size=int(cfg.subtitle_size * cfg.preview_scale),
+            title_color=cfg.title_color,
+            subtitle_color=cfg.subtitle_color,
+            box_bg=cfg.box_bg,
+            padding_px=text_padding,
+        )
+    else:
+        from PIL import ImageDraw
+        draw = ImageDraw.Draw(canvas)
+        x0, y0, x1, y1 = text_box
+        draw.rectangle([x0, y0, x1, y1], fill=cfg.box_bg)
 
     cfg.out_path.parent.mkdir(parents=True, exist_ok=True)
     ext = cfg.out_path.suffix.lower()
