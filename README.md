@@ -161,19 +161,6 @@ uv run python main.py \
 
 ---
 
-
-##
-
-uv run python main.py \
-  --input "./in" \
-  --output "./out/preview.png" \
-  --title "Lorenzo" \
-  --subtitle "My first year in 365 moments" --font "./fonts/AtkinsonHyperlegible-Bold.ttf" --title-size=500 --subtitle-size=200 \
-  --title-color "#0B0B0B" \
-  --subtitle-color "#444444" \
-  --preview-scale 0.15 
-
-
 ### Notes
 
 - Photos are sorted by **EXIF DateTimeOriginal**, then **DateTime**, with file modification time as fallback.
