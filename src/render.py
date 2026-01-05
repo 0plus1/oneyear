@@ -120,12 +120,13 @@ def render(cfg: Config) -> None:
     cfg.out_path.parent.mkdir(parents=True, exist_ok=True)
     ext = cfg.out_path.suffix.lower()
 
+    dpi = (cfg.dpi, cfg.dpi)
     if ext in {".tif", ".tiff"}:
-        canvas.save(cfg.out_path, compression="tiff_deflate")
+        canvas.save(cfg.out_path, compression="tiff_deflate", dpi=dpi)
     elif ext == ".png":
-        canvas.save(cfg.out_path, optimize=True)
+        canvas.save(cfg.out_path, optimize=True, dpi=dpi)
     elif ext in {".jpg", ".jpeg"}:
-        canvas.save(cfg.out_path, quality=95, subsampling=0)
+        canvas.save(cfg.out_path, quality=95, subsampling=0, dpi=dpi)
     else:
         raise RuntimeError("Output must be .tif/.tiff, .png, or .jpg/.jpeg")
 
